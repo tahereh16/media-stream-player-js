@@ -22,27 +22,23 @@ export class MediaStreamPlayer extends HTMLElement {
     this._setState = cb
   }
 
-  constructor() {
-    super()
-  }
-
-  static get observedAttributes() {
+  public static get observedAttributes() {
     return ['hostname', 'autoplay', 'format']
   }
 
-  get hostname() {
+  public get hostname() {
     return this.getAttribute('hostname') ?? ''
   }
 
-  set hostname(value: string) {
+  public set hostname(value: string) {
     this.setAttribute('hostname', value)
   }
 
-  get autoplay() {
+  public get autoplay() {
     return this.hasAttribute('autoplay')
   }
 
-  set autoplay(value) {
+  public set autoplay(value) {
     if (value !== undefined) {
       this.setAttribute('autoplay', '')
     } else {
@@ -50,15 +46,15 @@ export class MediaStreamPlayer extends HTMLElement {
     }
   }
 
-  get format() {
+  public get format() {
     return this.getAttribute('format') ?? 'JPEG'
   }
 
-  set format(value: string) {
+  public set format(value: string) {
     this.setAttribute('format', value)
   }
 
-  connectedCallback() {
+  public connectedCallback() {
     window
       .fetch(`http://${this.hostname}/axis-cgi/usergroup.cgi`, {
         credentials: 'include',
@@ -69,6 +65,7 @@ export class MediaStreamPlayer extends HTMLElement {
 
         ReactDOM.render(
           <PlayerComponent
+            // eslint-disable-next-line react/jsx-no-bind
             subscribeAttributesChanged={(cb) =>
               this.attributeChangeSubscriber(cb)
             }
@@ -86,11 +83,11 @@ export class MediaStreamPlayer extends HTMLElement {
       })
   }
 
-  disconnectedCallback() {
+  public disconnectedCallback() {
     ReactDOM.unmountComponentAtNode(this)
   }
 
-  attributeChangedCallback(attrName: string, _: string, value: string) {
+  public attributeChangedCallback(attrName: string, _: string, value: string) {
     if (this._setState === undefined) {
       console.warn(`ignored attribute change: ${attrName}=${value}`)
       return
